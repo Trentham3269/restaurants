@@ -30,7 +30,7 @@ class webserverHandler(BaseHTTPRequestHandler):
                     '''
                 for restaurant in restaurants:
                     edit_path = '/restaurants/{}/edit'.format(restaurant.id)
-                    del_path = 'resturants/{}/delete'.format(restaurant.id)
+                    del_path = '/resturants/{}/delete'.format(restaurant.id)
                     output += restaurant.name
                     output += '</br>'
                     output += '<a href={}>Edit</a>'.format(edit_path)
