@@ -30,11 +30,12 @@ class webserverHandler(BaseHTTPRequestHandler):
                     '''
                 for restaurant in restaurants:
                     edit_path = '/restaurants/{}/edit'.format(restaurant.id)
+                    del_path = 'resturants/{}/delete'.format(restaurant.id)
                     output += restaurant.name
                     output += '</br>'
                     output += '<a href={}>Edit</a>'.format(edit_path)
                     output += '</br>'
-                    output += '<a href=#>Delete</a>'
+                    output += '<a href={}>Delete</a>'.format(del_path)
                     output += '</br></br>'
                 output += '</body></html>'
                 self.wfile.write(output.encode())
@@ -60,7 +61,7 @@ class webserverHandler(BaseHTTPRequestHandler):
 
             if self.path.endswith('/edit'):
                 # Return restaurant id from url
-                restaurant_id = self.path.split("/")[2]
+                restaurant_id = self.path.split('/')[2]
                 edit_path = '/restaurants/{}/edit'.format(restaurant_id)
                 self.send_response(200)
                 self.send_header('Content-type', 'text/html')
@@ -75,6 +76,23 @@ class webserverHandler(BaseHTTPRequestHandler):
                     <button type="submit">Rename</button>
                     </form>
                     '''
+                output += '</body></html>'
+                self.wfile.write(output.encode())
+                return
+
+            if self.path.endswith('/delete'):
+                # Return restaurant id from url
+                restaurant_id = self.path.split('/')[2]
+                del_path = '/restaurants/{}/delete'.format(restaurant_id)
+                self.send_response(200)
+                self.send_header('Content-type', 'text/html')
+                self.end_headers()
+                output = ''
+                output += '<html><body>'
+                output += '<h3>Do you really want to delete?</h3>'
+                output += '<form method="POST" action={}>'.format(del_path)
+                output += '<button type="submit">Delete</button>'
+                output += '</form>'
                 output += '</body></html>'
                 self.wfile.write(output.encode())
                 return
@@ -115,6 +133,22 @@ class webserverHandler(BaseHTTPRequestHandler):
                 if update_restaurant != []:
                     update_restaurant.name = message
                     session.add(update_restaurant)
+                    session.commit()
+                    # Redirect to restaurants page
+                    self.send_response(303)
+                    self.send_header('Content-type', 'text/html')
+                    self.send_header('Location', '/restaurants')
+                    self.end_headers()
+                    return
+
+            if self.path.endswith('/delete'):
+                # Return restaurant id from url
+                restaurant_id = self.path.split("/")[2]
+                # Delete row in db
+                del_restaurant = session.query(
+                    Restaurant).filter_by(id=restaurant_id).one()
+                if del_restaurant != []:
+                    session.delete(del_restaurant)
                     session.commit()
                     # Redirect to restaurants page
                     self.send_response(303)
