@@ -1,7 +1,7 @@
 <html>
   <body>
   	<h1>{{ restaurant.name }}</h1>
-    <h4><a href = '{{ url_for('newMenuItem', restaurant_id=restaurant.id) }}'>Create New Item</a></h4>
+    <h4><a href="{{ url_for('newMenuItem', restaurant_id=restaurant.id) }}">Create New Item</a></h4>
   	  {% for item in items %}
   	  {{ item.name }}
     </br>
@@ -9,9 +9,9 @@
     </br>
       {{ item.price }}
     </br>
-    <a href='{{ url_for('editMenuItem', restaurant_id=restaurant.id, menu_id=item.id) }}'>Edit</a>
+    <a href="{{ url_for('editMenuItem', restaurant_id=restaurant.id, menu_id=item.id) }}">Edit</a>
     </br>
-    <a href='{{ url_for('deleteMenuItem', restaurant_id=restaurant.id, menu_id=item.id) }}'>Delete</a>
+    <a href="{{ url_for('deleteMenuItem', restaurant_id=restaurant.id, menu_id=item.id) }}">Delete</a>
     </br>
     </br>
       {% endfor %}
