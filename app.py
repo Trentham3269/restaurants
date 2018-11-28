@@ -44,6 +44,7 @@ def restaurantMenuAPI(restaurant_id):
                           MenuItem.description, MenuItem.price).filter_by(
                           restaurant_id=restaurant_id).all()
     # Output as json
+    # https://codehandbook.org/working-with-json-in-python-flask/
     item_list = []
     for item in items:
         item_dict = {
