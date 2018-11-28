@@ -1,8 +1,10 @@
 #!/usr/bin/python3
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask
+from flask import render_template, request, redirect, url_for, flash, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Restaurant, Base, MenuItem
+import json
 
 
 app = Flask(__name__)
@@ -30,6 +32,28 @@ def restaurantMenu(restaurant_id):
     return render_template('menu.html',
                            restaurant=restaurant,
                            items=items)
+
+
+@app.route('/restaurants/<int:restaurant_id>/menu/api/')
+def restaurantMenuAPI(restaurant_id):
+    # Return the restaurant from the url id
+    restaurant = session.query(Restaurant).filter_by(
+        id=restaurant_id).one()
+    # Return the menu items of the above restaurant
+    items = session.query(MenuItem.name, MenuItem.course,
+                          MenuItem.description, MenuItem.price).filter_by(
+                          restaurant_id=restaurant_id).all()
+    # Output as json
+    item_list = []
+    for item in items:
+        item_dict = {
+            'name': item[0],
+            'course': item[1],
+            'description': item[2],
+            'price': item[3]
+        }
+        item_list.append(item_dict)
+    return jsonify(item_list)
 
 
 @app.route('/restaurants/<int:restaurant_id>/new/',
