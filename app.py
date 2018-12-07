@@ -111,6 +111,7 @@ def gconnect():
 
     data = answer.json()
     login_session['name'] = data['name']
+    login_session['email'] = data['email']
 
     output = ''
     output += '<h3>Welcome, '
