@@ -110,13 +110,13 @@ def gconnect():
     answer = requests.get(userinfo_url, params=params)
 
     data = answer.json()
-    login_session['email'] = data['email']
+    login_session['name'] = data['name']
 
     output = ''
     output += '<h3>Welcome, '
-    output += login_session['email']
+    output += login_session['name']
     output += '!</h3>'
-    flash('You are now logged in as {}'.format(login_session['email']))
+    flash('You are now logged in as {}'.format(login_session['name']))
     return output
 
 
@@ -132,7 +132,7 @@ def gdisconnect():
         return response
     print('In gdisconnect access token is {}'.format(access_token))
     print('User name is: ')
-    print(login_session['email'])
+    print(login_session['name'])
     url = 'https://accounts.google.com/o/oauth2/revoke?token={}'.format(
         login_session['access_token'])
     h = httplib2.Http()
@@ -142,7 +142,7 @@ def gdisconnect():
     if result['status'] == '200':
         del login_session['access_token']
         del login_session['gplus_id']
-        del login_session['email']
+        del login_session['name']
         response = make_response(json.dumps(
             'Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
@@ -196,7 +196,7 @@ def restaurantMenuAPI(restaurant_id):
            methods=['GET', 'POST'])
 def newMenuItem(restaurant_id):
     # Restrict new menu item page to logged in users
-    if 'email' not in login_session:
+    if 'name' not in login_session:
         return redirect('/login/')
     if request.method == 'POST':
         new_item = MenuItem(name=request.form['name'],
@@ -217,7 +217,7 @@ def newMenuItem(restaurant_id):
            methods=['GET', 'POST'])
 def editMenuItem(restaurant_id, menu_id):
     # Restrict edit menu item page to logged in users
-    if 'email' not in login_session:
+    if 'name' not in login_session:
         return redirect('/login/')
     edit_item = session.query(MenuItem).filter_by(id=menu_id).one()
     if request.method == 'POST':
@@ -239,7 +239,7 @@ def editMenuItem(restaurant_id, menu_id):
            methods=['GET', 'POST'])
 def deleteMenuItem(restaurant_id, menu_id):
     # Restrict delete menu item page to logged in users
-    if 'email' not in login_session:
+    if 'name' not in login_session:
         return redirect('/login/')
     delete_item = session.query(MenuItem).filter_by(id=menu_id).one()
     if request.method == 'POST':

@@ -9,8 +9,8 @@
     <!-- GOOGLE PLUS SIGN IN BUTTON-->
     <div id="signinButton">
       <span class="g-signin"
-            data-scope="openid email"
-            data-clientid=""
+            data-scope="openid profile"
+            data-clientid="750738866039-t54g6fnf633veun4ktgh5rojq5gog0jg.apps.googleusercontent.com"
             data-redirecturi="postmessage"
             data-accesstype="offline"
             data-cookiepolicy="single_host_origin"
@@ -37,7 +37,7 @@
             $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
             setTimeout(function() {
               window.location.href = "/restaurants/1/menu/";
-            }, 4000);
+            }, 1000);
           } else if (authResult['error']) {
             console.log('There was an error: ' + authResult['error']);
           } else {
